@@ -2,6 +2,10 @@ const onClickAdd = () => {
   const inputText = document.getElementById("add-text").value;
   document.getElementById("add-text").value = "";
 
+  createIncompleteTodo(inputText);
+};
+
+const createIncompleteTodo = (todo) => {
   const li = document.createElement("li");
 
   const div = document.createElement("div");
@@ -9,27 +13,35 @@ const onClickAdd = () => {
 
   const p = document.createElement("p");
   p.className = "todo-item";
-  p.innerText = inputText;
+  p.innerText = todo;
 
   const completeButton = document.createElement("button");
   completeButton.innerText = "完了";
   completeButton.addEventListener("click", () => {
     const moveTarget = completeButton.closest("li");
     //隣のボタンを削除する
-    completeButton.nextElementSibling.remove()
+    completeButton.nextElementSibling.remove();
     //押されたボタン自身を削除する
     completeButton.remove();
-      const backButton = document.createElement("button");
-      backButton.innerText = "戻す"
-      moveTarget.firstElementChild.appendChild(backButton);
-      document.getElementById("complete-list").appendChild(moveTarget)
+    const backButton = document.createElement("button");
+      backButton.innerText = "戻す";
+      
+      backButton.addEventListener("click", () => {
+          // todolistを取得して未完了リストに追加する
+        const todoText = backButton.previousElementSibling.innerText
+          createIncompleteTodo(todoText)
+          backButton.closest("li").remove();
+      });
+
+    moveTarget.firstElementChild.appendChild(backButton);
+    document.getElementById("complete-list").appendChild(moveTarget);
   });
 
   const deleteButton = document.createElement("button");
   deleteButton.innerText = "削除";
   deleteButton.addEventListener("click", () => {
     //削除対象を取得する
-    const deleteTarget = deleteButton.closest("li")
+    const deleteTarget = deleteButton.closest("li");
     document.getElementById("incomplete-list").removeChild(deleteTarget);
   });
 
